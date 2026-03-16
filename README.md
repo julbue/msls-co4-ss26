@@ -4,7 +4,7 @@
 
 
 
-Git repository for the MSLS module CO4 – Imaging for the Life Sciences ([Moodle](https://mslscommunitycentre.ch/course/view.php?id=133))
+Git repository for the MSLS module CO4 – Imaging for the Life Sciences ([Moodle](https://mslscommunitycentre.ch/course/view.php?id=152))
 
 
 
@@ -27,7 +27,7 @@ We also recommend using a tool to manage different Python environments, such as 
 * Install **Python**
 
   * There are different possibilities to install Python on your system
-  * One possibility is to get the installer from: https://www.python.org/
+  * We recommend downloading the installer from https://www.python.org/.
 
 * Install **Visual Studio Code** (VS Code)
 
@@ -66,7 +66,7 @@ We also recommend using a tool to manage different Python environments, such as 
   cd "path/to/folder"
   
   # Clone this repository
-  git clone https://github.com/hirsch-lab/msls-co4-ss25.git
+  git clone https://github.com/hirsch-lab/msls-co4-ss26.git
   
   ```
 
@@ -99,17 +99,17 @@ We also recommend using a tool to manage different Python environments, such as 
   * Install the required packages
     ```bash
     # Win
-    python -m pip install -r msls-co4-ss25\requirements.txt
+    python -m pip install -r msls-co4-ss26\requirements.txt
     
     # Mac / Linux
-    python -m pip install -r msls-co4-ss25/requirements.txt
+    python -m pip install -r msls-co4-ss26/requirements.txt
     ```
 
 * Add the Git project folder to your VS Code **workspace**:
 
   * Open VS Code
   * File $\rightarrow$ Add Folder to Workspace...
-  * Choose the folder `msls-co4-ss25`
+  * Choose the folder `msls-co4-ss26`
 
 * Run the **test notebook** in VS Code:
 
