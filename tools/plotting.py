@@ -165,14 +165,17 @@ def show_image(image, title=None,
                ax=None, shape=None, 
                normalize=False,
                normalize_stretch=None,
+               scale=None,
                dpi=100, 
                suppress_info=False,
-               background_color=(0.93, 0.93, 0.93),
-               frame=False, 
+               background_color=(0.93, 0.93, 0.93), 
+               show_frame=False,
+               frame="deprecated",  # Replaced with show_frame
                frame_color=(0.8,)*4,
                frame_width=2,
                axes_frame=True,
                show_axes=False,
+               show_canvas_frame=True,
                box_aspect=None,
                figsize=None,
                save_kwargs={},
@@ -180,7 +183,7 @@ def show_image(image, title=None,
     """Displays an image using matplotlib capabilities.
 
     Args:
-        image: The image to display.
+        image: The image to display (as a numpy array or a file path).
         title: The title of the image.
         ax:    The image axis to use. If None, a new figure is created.
         shape: The shape of the canvas. If None, the shape is inferred 
@@ -194,11 +197,26 @@ def show_image(image, title=None,
                 stretched using the 1% and 99% percentiles of the intensity.
         normalize_stretch: If not None, the contrast is stretched using the
                 provided percentiles of the intensity. Sets normalize to True.
-        frame: If True, a frame is drawn around the image (if the image
+        show_frame: If True, a frame is drawn around the image (if the image
                is smaller than the canvas).
+        show_canvas_frame: Show boundary of the canvas. Default: True.
         save_kwargs: If not None, a dictionary of keyword arguments passed
                 to save_figure() to save the figure.
     """
+    if frame!="deprecated":
+        show_frame = frame
+        print("Warning: The 'frame' argument is deprecated. Use 'show_frame' instead.")
+    
+    if isinstance(image, (str, Path)):
+        image = plt.imread(image)
+        
+    if scale is not None:
+        from PIL import Image
+        image = Image.fromarray(image)
+        image = image.resize((int(image.width * scale), 
+                              int(image.height * scale)))
+        image = np.asarray(image)
+    
     height, width = image.shape[:2]
     
     if ax is None:
@@ -262,10 +280,14 @@ def show_image(image, title=None,
         ax.set_box_aspect(box_aspect)
         # Strange hack required if box_aspect is set, but only sometimes.
         ax.update_datalim([[ax.get_xlim()[1], ax.get_ylim()[1]]])
+        
+    if not show_canvas_frame:
+        for spine in ax.spines.values():
+            spine.set_color(None)
 
     h, w = image.shape[:2]
-    # Draw frame if:
-    if frame:
+    
+    if show_frame:
         rect = patches.Rectangle((0, 0), w, h, 
                                 linewidth=frame_width, 
                                 edgecolor=frame_color, 
@@ -273,6 +295,7 @@ def show_image(image, title=None,
 
         # Add the rectangle patch to the plot
         ax.add_patch(rect)  
+        
         
     if save_kwargs:
         save_figure(fig=fig, **save_kwargs)
@@ -285,7 +308,8 @@ def show_image_pair(image1, image2,
                     figsize=(6, 5),
                     shape="largest",
                     box_aspect=None,
-                    frame=True,
+                    frame="deprecated",  # Replaced with show_frame
+                    show_frame=True,
                     save_kwargs={},
                     **kwargs):
     """Displays a pair of images side-by-side.
@@ -297,13 +321,17 @@ def show_image_pair(image1, image2,
         title2: The title of the second image.
         normalize: If True, grayscale images are normalized.
         dpi:    The DPI of the figure.
-        frame:  If True, a frame is drawn around the images 
+        show_frame:  If True, a frame is drawn around the images 
                 (if the images are smaller than the canvas).
                 Set "forced" to force a frame.
         save_kwargs: If not None, a dictionary of keyword arguments passed
                 to save_figure() to save the figure.
         kwargs:  Additional keyword arguments passed to show_image().
     """
+    if frame!="deprecated":
+        show_frame = frame
+        print("Warning: The 'frame' argument is deprecated. Use 'show_frame' instead.")
+    
     # This converts PIL images to numpy arrays.
     image1 = np.asarray(image1)
     image2 = np.asarray(image2)
@@ -320,22 +348,22 @@ def show_image_pair(image1, image2,
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
-    draw_frame1 = ((frame=="forced") or 
-                   (frame and shape is not None and shape!=image1.shape[:2]))
-    draw_frame2 = ((frame=="forced") or 
-                   (frame and shape is not None and shape!=image2.shape[:2]))
+    draw_frame1 = ((show_frame=="forced") or 
+                   (show_frame and shape is not None and shape!=image1.shape[:2]))
+    draw_frame2 = ((show_frame=="forced") or 
+                   (show_frame and shape is not None and shape!=image2.shape[:2]))
     
     show_image(image1, title1, ax1, 
                normalize=normalize, 
                shape=shape, 
                box_aspect=box_aspect,
-               frame=draw_frame1,
+               show_frame=draw_frame1,
                **kwargs)
     show_image(image2, title2, ax2, 
                normalize=normalize, 
                shape=shape, 
                box_aspect=box_aspect,
-               frame=draw_frame2,
+               show_frame=draw_frame2,
                **kwargs) 
     fig.tight_layout()
     
@@ -361,7 +389,8 @@ def show_image_grid(images, titles=None,
                     suppress_info=False,
                     normalize=True,
                     box_aspect=None,
-                    frame=True,
+                    show_frame=True,
+                    frame="deprecated",  # Replaced with show_frame
                     header=None,
                     header_kwargs={},
                     save_kwargs={},
@@ -395,7 +424,7 @@ def show_image_grid(images, titles=None,
                 of the current data type. 
         box_aspect: If not None, the aspect ratio of the image is fixed.
                 Useful for images with different aspect ratios.
-        frame:  If True, a frame is drawn around the images (if the images
+        show_frame: If True, a frame is drawn around the images (if the images
                 are smaller than the canvas). Set "forced" to force a frame.
         header: If not None, a header is displayed above the images.
         header_kwargs: Additional keyword arguments passed to show_header().
@@ -407,6 +436,10 @@ def show_image_grid(images, titles=None,
         show_image_grid([image1, image2, image3]) 
         show_image_grid({title1: image1, title2: image2, title3: image3})
     """
+    if frame!="deprecated":
+        show_frame = frame
+        print("Warning: The 'frame' argument is deprecated. Use 'show_frame' instead.")
+    
     if not images:
         return
     
@@ -468,14 +501,14 @@ def show_image_grid(images, titles=None,
         if image is None:
             ax.axis("off")
             continue        
-        draw_frame = ((frame=="forced") or 
-                      (frame and shape is not None and shape!=image.shape[:2]))
+        draw_frame = ((show_frame=="forced") or 
+                      (show_frame and shape is not None and shape!=image.shape[:2]))
         show_image(image, title=title, ax=ax, 
                    suppress_info=suppress_info, 
                    normalize=normalize,
                    box_aspect=box_aspect,
                    shape=shape,
-                   frame=draw_frame,
+                   show_frame=draw_frame,
                    **kwargs)
         
     # Disable grid axes that are not used
