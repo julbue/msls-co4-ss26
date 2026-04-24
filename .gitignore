@@ -43,3 +43,6 @@ notebooks/pdfs/
 
 # Ignore output folders
 out*/
+
+# Ignore the SAM model
+sam*.pth

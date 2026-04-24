@@ -30,7 +30,27 @@ PALETTE_CMAP_CONT_RG = color_palette(PALETTE[1:3],
 PALETTE_CMAP = color_palette("default",
                              mix_color="white", as_cmap=True, n_cmap=3)
 PALETTE_PLOTLY = colors2plotly(PALETTE)
-# PALETTE_RGB = [PALETTE[1], PALETTE[2], PALETTE[0]]
+PALETTE_RGB = [PALETTE[1], PALETTE[2], PALETTE[0]]
+
+
+def print_title(title, level=1, sep=None):
+    if sep is None:
+        sep = "#" if level == 1 else "-"
+        
+    if level == 1:
+        width = max(60, len(title))
+    else:
+        width = len(title)
+    
+    if level == 1:
+        print()
+        print(sep * width)
+        print(title)
+        print(sep * width)
+    else:
+        print()
+        print(title)
+        print(sep * width)
 
 def show_separator():
     """Displays a separator line."""
@@ -45,14 +65,55 @@ def show_header(title=None,
                 fontsize=24, 
                 color=None,
                 align="left",
-                kwargs={},
                 
                 # Default subtitle style
                 subtitle_fontsize=16, 
                 subtitle_color=None,
+                subtitle_align="left",
                 subtitle_kwargs={},
+
+                # Line style
+                line_placment=None,
+                line_style={},
+
+                **kwargs
                 ):
-    """Displays a header with a title and a subtitle."""
+    """Displays a header with a title and a subtitle.
+
+    Args:
+        - title: The title of the header.
+        - subtitle: The subtitle of the header.
+        - width: The width of the header.
+        - line_placement: The placement of the line. Can be
+                "before_title",
+                "after_title",
+                "after_subtitle",
+                or a list of line placements,
+                if None, no line is shown.
+    """
+
+    def _display(html):
+        display(HTML(html))
+        #print(html)
+
+    def add_line(line_style, **kwargs):
+        line_style = dict(line_style)
+        line_style.setdefault("width", width_str)
+        line_style.setdefault("border-top", "2px solid #333333")
+        #line_style.setdefault("border-bottom", "none")
+        line_style.setdefault("margin", "0 0 0 0")
+        line_style.update(kwargs)
+        html = """
+                <div style="%s"></div>
+            """
+        html = html % (style2str(line_style))
+        return html
+
+    def add_blank_line(height=10):
+        html = """
+                <div style="height: %dpx;"></div>
+            """ % height
+        return html
         
     if width is None:
         width_str = "9in"
@@ -63,35 +124,51 @@ def show_header(title=None,
     else:
         raise ValueError("Invalid type for width: %s" % type(width))
     
+    if line_placment is None:
+        line_placment = []
+    elif isinstance(line_placment, str):
+        line_placment = [line_placment]
+
     title_style = dict()
-    title_style.update(kwargs)
     title_style.setdefault("width", width_str)
     title_style.setdefault("text-align", align)
     title_style.setdefault("font-size", "%dpx" % fontsize)
     title_style.setdefault("font-weight", "bold")
     title_style.setdefault("color", color or "#333333")
     title_style.setdefault("border", "none")
-    title_style.setdefault("margin", "30px 0 0 0")
+    title_style.setdefault("margin", "0px 0 0px 0")
+    title_style.setdefault("padding", "10px 0")
     title_style.setdefault("vertical-align", "middle")
+    title_style.setdefault("display", "block")
+    title_style.setdefault("line-height", "1")
+    title_style.update(kwargs)
+
     # title_style.setdefault("padding", "0px")
     # title_style.setdefault("background-color", "transparent")
     
     subtitle_style = dict()
-    subtitle_style.update(subtitle_kwargs)
     subtitle_style.setdefault("width", width_str)
-    subtitle_style.setdefault("text-align", "center")
+    subtitle_style.setdefault("text-align", subtitle_align)
     subtitle_style.setdefault("font-size", "%dpx" % subtitle_fontsize)
     #subtitle_style.setdefault("font-weight", "bold")
     subtitle_style.setdefault("color", subtitle_color or "#999999")
     subtitle_style.setdefault("border", "none")
-    subtitle_style.setdefault("margin", "0 0 0 0")
-    subtitle_style.setdefault("padding", "0px")
+    subtitle_style.setdefault("margin", "0px 0 0px 0")
+    subtitle_style.setdefault("padding", "10px 0")
+
     # subtitle_style.setdefault("background-color", "transparent")
+    subtitle_style.update(subtitle_kwargs)
     
     # Convert styles to string
     def style2str(style):
         return "; ".join(["%s:%s" % (key, value) for key, value in style.items() if value is not None])  
     
+    body = ""
+
+    body += add_blank_line(height=30)
+
+    if "before_title" in line_placment:
+        body += add_line(line_style, margin="0 0 0 0")
 
     if title is not None:
         html = """
@@ -102,8 +179,11 @@ def show_header(title=None,
                 />
             """
         html = html % (style2str(title_style), title)
-        display(HTML(html));
-    
+        body += html
+
+    if "after_title" in line_placment:
+        body += add_line(line_style)
+
     if subtitle is not None:
         html = """
                 <input
@@ -113,7 +193,15 @@ def show_header(title=None,
                 />
             """
         html = html % (style2str(subtitle_style), subtitle)
-        display(HTML(html));
+        body += html
+
+    if "after_subtitle" in line_placment:
+        body += add_line(line_style)
+
+
+    display(HTML(body))
+    #print(body)
+
 
 
 # Set default color palett
@@ -161,18 +249,23 @@ def draw_image(image, **kwargs):
     return show_image(image, **kwargs)
 
 
-def show_image(image, title=None, 
+def show_image(image,
                ax=None, shape=None, 
                normalize=False,
                normalize_stretch=None,
+               scale=None,
                dpi=100, 
+               title=None,
+               title_kwargs={},
                suppress_info=False,
                background_color=(0.93, 0.93, 0.93),
-               frame=False, 
+               show_frame=False,
+               frame="deprecated",  # Replaced with show_frame
                frame_color=(0.8,)*4,
                frame_width=2,
                axes_frame=True,
                show_axes=False,
+               show_canvas_frame=True,
                box_aspect=None,
                figsize=None,
                save_kwargs={},
@@ -180,8 +273,7 @@ def show_image(image, title=None,
     """Displays an image using matplotlib capabilities.
 
     Args:
-        image: The image to display.
-        title: The title of the image.
+        image: The image to display (as a numpy array or a file path).
         ax:    The image axis to use. If None, a new figure is created.
         shape: The shape of the canvas. If None, the shape is inferred 
                from the image.
@@ -194,11 +286,28 @@ def show_image(image, title=None,
                 stretched using the 1% and 99% percentiles of the intensity.
         normalize_stretch: If not None, the contrast is stretched using the
                 provided percentiles of the intensity. Sets normalize to True.
-        frame: If True, a frame is drawn around the image (if the image
+        title: The title of the image.
+        title_kwargs: Additional keyword arguments passed to ax.set_title().
+        show_frame: If True, a frame is drawn around the image (if the image
                is smaller than the canvas).
+        show_canvas_frame: Show boundary of the canvas. Default: True.
         save_kwargs: If not None, a dictionary of keyword arguments passed
                 to save_figure() to save the figure.
     """
+    if frame!="deprecated":
+        show_frame = frame
+        print("Warning: The 'frame' argument is deprecated. Use 'show_frame' instead.")
+
+    if isinstance(image, (str, Path)):
+        image = plt.imread(image)
+
+    if scale is not None:
+        from PIL import Image
+        image = Image.fromarray(image)
+        image = image.resize((int(image.width * scale),
+                              int(image.height * scale)))
+        image = np.asarray(image)
+
     height, width = image.shape[:2]
     
     if ax is None:
@@ -241,7 +350,7 @@ def show_image(image, title=None,
         title += "\n" if title else ""
         title += "(%s, %s)" % ("x".join(map(str, image.shape)), image.dtype)
     if title:
-        ax.set_title(title)
+        ax.set_title(title, **title_kwargs)
     
     # Use fixed axis limits so that
     # the images are shown at scale.
@@ -263,9 +372,13 @@ def show_image(image, title=None,
         # Strange hack required if box_aspect is set, but only sometimes.
         ax.update_datalim([[ax.get_xlim()[1], ax.get_ylim()[1]]])
 
+    if not show_canvas_frame:
+        for spine in ax.spines.values():
+            spine.set_color(None)
+
     h, w = image.shape[:2]
-    # Draw frame if:
-    if frame:
+
+    if show_frame:
         rect = patches.Rectangle((0, 0), w, h, 
                                 linewidth=frame_width, 
                                 edgecolor=frame_color, 
@@ -274,6 +387,7 @@ def show_image(image, title=None,
         # Add the rectangle patch to the plot
         ax.add_patch(rect)  
         
+
     if save_kwargs:
         save_figure(fig=fig, **save_kwargs)
         
@@ -285,7 +399,8 @@ def show_image_pair(image1, image2,
                     figsize=(6, 5),
                     shape="largest",
                     box_aspect=None,
-                    frame=True,
+                    frame="deprecated",  # Replaced with show_frame
+                    show_frame=True,
                     save_kwargs={},
                     **kwargs):
     """Displays a pair of images side-by-side.
@@ -297,13 +412,17 @@ def show_image_pair(image1, image2,
         title2: The title of the second image.
         normalize: If True, grayscale images are normalized.
         dpi:    The DPI of the figure.
-        frame:  If True, a frame is drawn around the images 
+        show_frame:  If True, a frame is drawn around the images
                 (if the images are smaller than the canvas).
                 Set "forced" to force a frame.
         save_kwargs: If not None, a dictionary of keyword arguments passed
                 to save_figure() to save the figure.
         kwargs:  Additional keyword arguments passed to show_image().
     """
+    if frame!="deprecated":
+        show_frame = frame
+        print("Warning: The 'frame' argument is deprecated. Use 'show_frame' instead.")
+
     # This converts PIL images to numpy arrays.
     image1 = np.asarray(image1)
     image2 = np.asarray(image2)
@@ -320,22 +439,24 @@ def show_image_pair(image1, image2,
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
-    draw_frame1 = ((frame=="forced") or 
-                   (frame and shape is not None and shape!=image1.shape[:2]))
-    draw_frame2 = ((frame=="forced") or 
-                   (frame and shape is not None and shape!=image2.shape[:2]))
+    draw_frame1 = ((show_frame=="forced") or
+                   (show_frame and shape is not None and shape!=image1.shape[:2]))
+    draw_frame2 = ((show_frame=="forced") or
+                   (show_frame and shape is not None and shape!=image2.shape[:2]))
     
-    show_image(image1, title1, ax1, 
+    show_image(image1, ax=ax1,
                normalize=normalize, 
                shape=shape, 
+               title=title1,
                box_aspect=box_aspect,
-               frame=draw_frame1,
+               show_frame=draw_frame1,
                **kwargs)
-    show_image(image2, title2, ax2, 
+    show_image(image2, ax=ax2,
                normalize=normalize, 
                shape=shape, 
+               title=title2,
                box_aspect=box_aspect,
-               frame=draw_frame2,
+               show_frame=draw_frame2,
                **kwargs) 
     fig.tight_layout()
     
@@ -361,7 +482,8 @@ def show_image_grid(images, titles=None,
                     suppress_info=False,
                     normalize=True,
                     box_aspect=None,
-                    frame=True,
+                    show_frame=True,
+                    frame="deprecated",  # Replaced with show_frame
                     header=None,
                     header_kwargs={},
                     save_kwargs={},
@@ -395,7 +517,7 @@ def show_image_grid(images, titles=None,
                 of the current data type. 
         box_aspect: If not None, the aspect ratio of the image is fixed.
                 Useful for images with different aspect ratios.
-        frame:  If True, a frame is drawn around the images (if the images
+        show_frame: If True, a frame is drawn around the images (if the images
                 are smaller than the canvas). Set "forced" to force a frame.
         header: If not None, a header is displayed above the images.
         header_kwargs: Additional keyword arguments passed to show_header().
@@ -407,6 +529,10 @@ def show_image_grid(images, titles=None,
         show_image_grid([image1, image2, image3]) 
         show_image_grid({title1: image1, title2: image2, title3: image3})
     """
+    if frame!="deprecated":
+        show_frame = frame
+        print("Warning: The 'frame' argument is deprecated. Use 'show_frame' instead.")
+
     if not images:
         return
     
@@ -468,14 +594,14 @@ def show_image_grid(images, titles=None,
         if image is None:
             ax.axis("off")
             continue        
-        draw_frame = ((frame=="forced") or 
-                      (frame and shape is not None and shape!=image.shape[:2]))
+        draw_frame = ((show_frame=="forced") or
+                      (show_frame and shape is not None and shape!=image.shape[:2]))
         show_image(image, title=title, ax=ax, 
                    suppress_info=suppress_info, 
                    normalize=normalize,
                    box_aspect=box_aspect,
                    shape=shape,
-                   frame=draw_frame,
+                   show_frame=draw_frame,
                    **kwargs)
         
     # Disable grid axes that are not used
@@ -489,102 +615,19 @@ def show_image_grid(images, titles=None,
     plt.show()
 
 
-def save_figure(fig=None, path="figure.pdf", **kwargs):
+def save_figure(fig=None, path="figure.pdf",
+                subdir_ext=False,
+                **kwargs):
     if fig is None:
         fig = plt.gcf()
     kwargs.setdefault("transparent", True)
     kwargs.setdefault("bbox_inches", "tight")
     kwargs.setdefault("dpi", 300)
     path = Path(path)
+    if subdir_ext:
+        ext = path.suffix.lstrip(".").lower()
+        subdir = path.parent / ext
+        path = subdir / path.name
+
     ensure_dir(path.parent)
     plt.savefig(path, **kwargs)
-
-
-
-def plot_decision_boundary(clf, X, y, 
-                           X_test=None, y_test=None, 
-                           n_steps=1000, data=None, ax=None,
-                           legend="grouped"):
-    """
-    Plot the decision boundaries of a classifier with two features.
-    You don't need to understand the details of this function.
-    
-    Args:
-        clf: The classifier to plot.
-        X: The features of the dataset.
-        y: The labels of the dataset.
-        X_test: (optional) The features of the test dataset
-        y_test: (optional) The labels of the test dataset
-        n_steps: Parameter controlling the resolution of the plot.
-        ax: The axis to plot on. If None, a new figure is created.
-        data: Data structure provided by sklearn.datasets.load_iris().
-    """
-    assert isinstance(X, pd.DataFrame)
-    if ax is None:
-        _, ax = plt.subplots()
-    x1, x2 = X.iloc[:, 0], X.iloc[:, 1]
-    x1_min, x1_max = x1.min() - 1, x1.max() + 1
-    x2_min, x2_max = x2.min() - 1, x2.max() + 1
-    xx1, xx2 = np.meshgrid(
-        np.linspace(x1_min, x1_max, n_steps),
-        np.linspace(x2_min, x2_max, n_steps)
-    )
-    zz = clf.predict(pd.DataFrame(np.c_[xx1.ravel(), xx2.ravel()],
-                                  columns=X.columns))
-    zz = zz.reshape(xx1.shape)
-    ax.contourf(xx1, xx2, zz, cmap=plt.cm.RdYlBu, alpha=0.4) 
-    handles = []
-    for i, color in zip(range(3), "ryb"):
-        group = []
-        label = data.target_names[i] if data is not None else ("Class %d" % i)
-        h = ax.scatter(
-            x1[y == i],
-            x2[y == i],
-            color=color,
-            label=label,
-            edgecolor="black",
-            linewidth=0.25,
-            s=20,
-        )
-        group.append(h)
-        if X_test is not None and y_test is not None:
-            label = ((data.target_names[i] + " (test)") if data is not None 
-                    else ("Class %d (test)" % i))
-            label = None
-            h = ax.scatter(
-                X_test.iloc[:, 0][y_test == i],
-                X_test.iloc[:, 1][y_test == i],
-                color=color,
-                label=label,
-                edgecolor="black",
-                linewidth=0.25,
-                s=20,
-                marker="^",
-            )
-            group.append(h)
-        handles.append(tuple(group))
-    ax.set_xlabel(x1.name)
-    ax.set_ylabel(x2.name)
-    
-    # Add legend with different markers for test data, if present.
-    # https://matplotlib.org/stable/users/explain/axes/legend_guide.html
-    if legend == "grouped":
-        from matplotlib.legend_handler import HandlerTuple
-        suffix = ""
-        if data is not None:
-            labels = data.target_names
-        else:
-             labels = ["Class %d" % i for i in range(3)]
-            
-        if X_test is not None and y_test is not None:
-            suffix = " (train/test)"
-        ax.legend(handles=handles, 
-                labels=[name+suffix for name in labels],
-                handler_map={tuple: HandlerTuple(ndivide=None)},
-                fontsize="small")
-    elif legend == "simple":
-        ax.legend()
-    elif legend in ("none", False, None):
-        ax.legend().remove()
-    else:
-        raise ValueError("Invalid value for 'legend'.")
