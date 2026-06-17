@@ -1,0 +1,172 @@
+;;Overview;;;;Specifications;;;;Technicalities ;;;;Device;Application;;;
+Technique;Method;Description;Advantages;Disadvantages ;Probes ;Resolution;Selectivity;Penetration Depth;Limitations;Excitation ;Radiation Source;Signal;Detection;Parts;Process;Applications;Targets;Specials
+Optical Imaging;Fluorescence Microscopy;In Fluorescenc microscopy fluorescent reporter probes are excited with light wich then emit light that can be detected;"- all optical imaging: cost and time efficient
+- high versatility, wide range of light tissue interactions
+- increasing number of reporter proteins
+- Microscopic + Macroscopic imaging allows evaluation of process, detected by whloe-body imaging at cellular level
+
+- extrem broad since Probes can be desinged for a purpose
+- visible by eye / microscope, no signal processing ";"- limited tissue penetration depth
+- Full quantification difficult
+- macroscopic imaging resolution only in mm range";"- Probes (usually dyes or fluorescent proteins): 
+- Not Specific/Unspecific not binding, e.g. Nanoparticles, show vessels (FITC-dextran)
+- Specific contrast agents: interact with special tissue/protein and make it visible (Alexa 647)
+- Smart probes:  only get activated if the carrier protein is processed (VGT309)
+- GFP, RFP, StayGold, myCherry, ...";"macro 1 - 2 mm
+micro 10 - 100 µm";- high depending on fluorophore;;"- penetration depth
+- low sharpness due to light scattering";Visible, NIR;"lasers, and normal light sources
+Visible, NIR 650 - 700 nm optimal, because there the absorbation from the tissue (water/hemeoglobin) is the lowest";Emmision of light photons due to transisiton from electronically excited state to ground state;CCD, from Eye, Microscope;"Light Source: NIR laserdiode
+Filter/Lenses
+Fluorescenc Filter
+CCD camera";"Injection of Probe
+Excite probe with light in suiting wavelength
+Imaging
+Confocal / two photon: sample grid";"- all Optical imaging: diagnostic purposes
+- imaging therapeutic efficacy
+- imaging the preclincial drug development
+
+- capture of change in geneexpression
+- detection of cancerspecific membrane proteins
+- monitoring specific protein activity
+- Labeling of malignant tissue during surgery
+- visualize vasculature (vessel network) ";Proteins, Vessels, Tumors;
+;Confocal Microscopy;;- higher resolution than a broad field microscope;;;~ 1 µm - 1 mm;- high only slice;100 - 200 µm ;"- phototoxicity
+- low penetration depth
+- laser";;;;;Laser > Pinhole, Dichromic Mirror > Sample > Dichromic Mirror > Detector Pinhole > Detector;;- imaging trafficking of dendritic cells trhough lymphatics;;
+;Multiphoton Microscopy;;"- no scattering
+- no confocal apperture needed
+- more specific excitation";;;~1 µm - 1 mm;- high only excited regions;500 - 1000 µm;"- expensive
+- laser";;;;;Pulsed Laser > Microscope > Bandpass Filter > Detector;;"- in vivo imaging at cellular and subcelluarl resolution
+- efficacy imaging
+- in vico targeting ";;
+;Bioluminescenc imaging;Instead of injecting  Fluorescent reporter, a reporter gene is attached to a promotor, if the promoted gene is expressed the reporter gene also gets expressed and  can report this;"- high sensitivity
+- no phototoxicity (no exciting with light)
+- non invasive
+- high penetration depth";"- requires protein / or genetic modification, which is only allowed in preclinical studies
+- long exposure times necessary (weak signal)
+- quantification difficult
+- high scattaring and absorption
+-  low singnal to noise";Luciferase;mm region or higher ;- low, less structural information;high, whole animals possible;"- low resoultions
+- long exposure times
+- weak signal ";none, self induced;Fluorescent protein expressed;Emmision of light photons due to transisiton from electronically excited state to ground state;CCD, from Eye, Microscope;e.g. Edited Gene in Tumor cells  ;"injection of prepared cells with promotor/gene for luciferase 
+screening";"- meassureing the blockage of tumor growth
+- meassureing hypoxic cell signaling";;
+MR;MRI;Magnetic Resonance Imaging is a non ivasive technique, which has many applications, it uses magnetic fields, to aling Protons and then excite them with RF Pulses, the relaxation can be measured. ;"- High soft tissue contrasts
+- Entire body can be measured
+- No ionizing radiation (non invasive)
+- Multi-Planar Imaging (arbitrary layer orientations)
+- Software controlled
+- many possible applications";"- devices are extremly expensive
+- devices are hard to master
+- devices are extremly loud
+- metallic implants can prohibit meassurement
+- Magnetic fields / device take up a lot of space";Contrast agents can be used;"depending on device: 
+clinical standard 0.5 - 3 T -> ~1mm
+
+high field: 
+? 7T -> 0.3 mm ";"- contrast agentes can enhance
+- Sequences, T1, T2, etc. for tissue contrast";± unlimited, whole body;"- time resolution of fMRI
+- implants
+- long scan and editing times";Aligned Electorns are exctied with radiofrequent pulses;"Magnetic field: Superconducting Magnet 
+RF pulses: 
+Gradients: ";"from hydrogen atoms (protons)
+alignement in magnetic field produces detectable singal when returning to original state
+spin can be flipped with waves in radiofrequency";"Larmor Frequency is proportional to the change in the magnetic field (w0 = y * B0)
+Echos, T1 & T2";"- Electro magnets in vacuum
+- superconducting coils
+(magnet, Gradient, RF)
+- Cryocooler
+- Liquid helium
+- Patient table
+- A/D system
+- Processing unit (PC)";"depending on sequence
+- Gradient Echo Sequence (1 pulse) 
+- EPI (if moving) 
+- Spin Echo (rarely)
+- TSE (workhorse)";"- anatomy
+- diffusion: measure molecules diffusing
+- function: brain function (active regions)
+- perfusion: blood circulation, qualification
+- chemical information: malign tumors, heating tumors, stiffness of tissue";whole body;
+Xray, CT, PET;Xray;High energy rays penetrate an object, some of them get absorbed/scatterd some reach the detector where they generate an image according to lamberte beer.;"- whole body scans
+- high penetration depth";"- xrays are invasive and can cause cancer
+- low soft tissue contrast
+- ";Contrast agents can be used;"influenced by: 
+- distance of target from detector
+- detector properties";mainly high densitiy objects > bones;± unlimited, whole body;- different organ sizes depending on imaging geometry ;xrays ;"Xtray-tube: 
+Cathode/Heating Coils, emits e-, hit Anode, if electron in A is hit x-.ray is emitted, otherwise bremsstrahlung, watercooling";Xray is absorbed/scatterd by the body, the remaining xray hits the detector, where much was absorbed/scatterd the attenuation coefficient is high (white);remaining xray photons ;Xray source, Collimator, Target, Anti-scatter grid, Detector (solid-state);like taking a picture;- frequently used for numerous pathologies;whole body;
+;CT;A Computer tomograph is a Xray device which orbits an object/body to take multiple images, from the images a slice can be reconstructed;"- tomographic
+- measureing despite implants possible
+- multiplanar imaging";"- special equipment
+- mediocer resolution (collimator, gammacamera)
+- different organsizes depending on image geometry)
+- but implants can cause artifacts ";Contrast agents can be used;;depending on HU window;± unlimited, whole body;;xrays ;xray tube;Xray is absorbed/scatterd by the body, the remaining xray hits the detector, where much was absorbed/scatterd the attenuation coefficient is high (white);remaining xray photons, intensity profile;Xray source on a rail to turn around the object, detector, motorized table, ;Radon Transformation, Sinogram>smearback, ;"- whole body scans with different tissue window
+> bones, thorax, head
+- image basis for PET / SPECT
+- ";whole body, slices;
+;PET;Positron Emission Tomography makes use of radiotracers, these interact with the tissue to create gamma-rays, which can be detected;"- Tomographic reconstruction possible
+- is to show metabolisms and functions (not anatomy) 
+- less to none artefacts";"- expensive equipment (cyclotron)
+- Radioactive tracers
+- some organs are alwasy visible (bladder)
+- only used for specific cases, where pathology is assumed
+- bad resolution
+- strong noise (small amount of radio tracer)";Radiotracers;;depending on radiotracer, higly specific;± unlimited, whole body;"- relatively strong noise, grainy (low amount of tracer), 
+- finite imaging time";Radiotracers emitting positrons, which interact with tissue;Radiotracers (18F, 11C, 15O, 13N, 82Rb;two gamma-rays from tissue, going in opposite directions;no collimator, gamma ray detector;Radiotracer applicaiton, patient table, complete ring of detectors around it, processing unit;;"- lung scintigraphy (inhalation of Xenon gas)
+- Cancer detection
+- Heart disease
+- Neurological disorders";whole body, slices;
+;SPECT;Single Photon Emission Computer Tomography makes use of radiotraces emitting gamma-rays, which can be detected ;"- tomographic recornstruction possible
+- is to show metabolisms and functions (not anatomy) 
+- less to none artefacts";"- some organs are always visible (bladder)
+- radioactive tracers
+- resoltuion is mediocre > visible blurring (intrinsic issue of gamma camera/collimator) 
+- only used for specific cases, where pathology is assumed
+- strong noise (small amount of radio tracer)";Radiotracers;;depending on radiotracer, higly specific;± unlimited, whole body;depending on radiotracer, higly specific;none, self induced;gamma emitting radioisotopes;gamma ray from radioisoptop;two rectangular detectors, scintillator, photomultiplier;min. two gamma cameras (rotating around patient), Collimator, Scintillation crytal, Photomultiplier tubes, Processing unit;;"- Myocardial perfusion
+- Heart disease
+- Neurological disorders
+- Blood flow in brain";whole body, slices;
+Ultrasound and Optoacoustic Imaging;Ultrasound Imaging;The echos of ultrasound waves are detected and transformed into an image. Depending on the frequency with higher resolution or penetration depth. It s widley spread technique with a lot of applications in medical context;"- safe (non-ionizing radiation)
+- real time operations
+- portable
+- relatively low cost";"- relatively low signal to noise ratio
+- realatively low penetration depth
+- result can be operator dependent";Contrast agents can be used;"frequency dependet
+7.5 MHz: 210 µm
+100 MHz: 16 µm";;"frequency dependent acoustic attenuation, approx. 200 wavelengths
+7.5 MHz: 50-70 mm
+100 MHz: 0.8-1.5 mm";;Ultrasound, pulse echo principle;Piezoelectric effect ;ultrasound is sent, the echo is recorded, depending how much of the sound is reflected the image can be created;echo detection, ultrasound;Piezoelectric sound source, gel, Piezoelement to detect;;"- Ultrasound Therapy (opening blood brain barrier)
+- C-mode (contrast)
+- M-mode (motion) 
+- A-mode (signal as function of time) 
+- Vessels
+- Obstetric (prenatal) ultrasound
+- 4D ultrasound (sequence of 3D images)
+- assesing Brain malformations
+- assesment aneurysms
+- Breast cancer
+- Heart diseases
+- liver cancer metastais
+- kidney perfusion";;"doppler effect allows to detect to direction of the flow rate (blue away / red towards)
+- ultrasound transmission tomography
+- ultrafast imaging (unfocused waves, 
+- ultrasound elastography"
+;Optoacoustic Imaging;Instead of ultrsound waves laser pulses lead to a fast extent which results in a soundwave which can be detected. This enables higher resolutions in combination with increased peneatration depths.;"- Multispectral tomography (3D, time, wavelength)
+- scan small areas up to whole body scans (mouse)
+- high molecular contrast 
+- high penetration depth
+- non invasive, non ionizing";"- has to be direct on skinn / gaps shunt with water (reduce acousitc impedance) 
+- complex devices
+- dependent on light-absorbing properties of tissue
+- image reconstruction is computational intensive";none;"- spatial res 10 µm - 1000 µm
+- temporal resolution up to 1000 fps";;"Opto Microscopy: 1 mm
+1000 µm - 10 mm";"- higher Frequency > higher Resoltion
+- lower frequency > larger field of view
+- the more light absorbtion the more signal";Short Pulsed Laser (<100 ns, typically ~10 ns) thermal expansion of tissue;Pulsed laser;"Acoustic Signal ""Echo"" of thermal expanded of tissue";echo detection, ultrasound;Optical fiber, semi spheric transducer array, cavity filled with water, ;Laser /RF Pulse > Adsorption > thermal expansion > Acoustic waves > Ultrasonic detection > Image formation;"- Breast cancer
+- skin cancer
+- Inflammatory Bower Disease
+- Vascular Diseases
+- Thyroid Cancer
+- Llymphography
+- Muscular Dystrophy
+- Diabetes";depending on wavelength of laser;
